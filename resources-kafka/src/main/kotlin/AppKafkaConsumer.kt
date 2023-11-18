@@ -1,4 +1,4 @@
-package ru.otus.otuskotlin.marketplace.app.kafka
+package com.crowdproj.resources.app.kafka
 
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.Dispatchers
@@ -12,8 +12,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.errors.WakeupException
-import ru.otus.otuskotlin.marketplace.app.common.controllerHelper
-import ru.otus.otuskotlin.marketplace.common.ResourcesContext
+import com.crowdproj.resources.app.common.controllerHelper
+import com.crowdproj.resources.common.ResourcesContext
 import java.time.Duration
 import java.util.*
 

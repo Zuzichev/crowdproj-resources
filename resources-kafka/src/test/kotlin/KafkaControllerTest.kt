@@ -1,5 +1,6 @@
-package ru.otus.otuskotlin.marketplace.app.kafka
+package com.crowdproj.resources.app.kafka
 
+import kotlinx.serialization.json.Json
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.consumer.MockConsumer
 import org.apache.kafka.clients.consumer.OffsetResetStrategy
@@ -7,15 +8,8 @@ import org.apache.kafka.clients.producer.MockProducer
 import org.apache.kafka.common.TopicPartition
 import org.apache.kafka.common.serialization.StringSerializer
 import org.junit.Test
-import ru.otus.otuskotlin.marketplace.api.v1.apiV1RequestSerialize
-import ru.otus.otuskotlin.marketplace.api.v1.apiV1ResponseDeserialize
-import ru.otus.otuskotlin.marketplace.api.v1.models.ResourceCreateObject
-import ru.otus.otuskotlin.marketplace.api.v1.models.ResourceCreateRequest
-import ru.otus.otuskotlin.marketplace.api.v1.models.ResourceCreateResponse
-import ru.otus.otuskotlin.marketplace.api.v1.models.ResourceDebug
-import ru.otus.otuskotlin.marketplace.api.v1.models.ResourceRequestDebugMode
-import ru.otus.otuskotlin.marketplace.api.v1.models.ResourceRequestDebugStubs
-import ru.otus.otuskotlin.marketplace.api.v1.models.ResourceVisibility
+import com.crowdproj.resources.api.v1.encodeRequest
+import com.crowdproj.resources.api.v1.models.*
 import java.util.*
 import kotlin.test.assertEquals
 
@@ -38,18 +32,19 @@ class KafkaControllerTest {
                     PARTITION,
                     0L,
                     "test-1",
-                    apiV1RequestSerialize(ResourceCreateRequest(
-                        requestId = "11111111-1111-1111-1111-111111111111",
-                        resource = ResourceCreateObject(
-                            scheduleId = "Some Ad",
-                            ownerId = "some testing ad to check them all",
-                            visible = ResourceVisibility.OWNER_ONLY,
-                        ),
-                        debug = ResourceDebug(
-                            mode = ResourceRequestDebugMode.STUB,
-                            stub = ResourceRequestDebugStubs.SUCCESS
+                    encodeRequest(
+                        ResourceCreateRequest(
+                            resource = ResourceCreateObject(
+                                scheduleId = "Some Ad",
+                                ownerId = "some testing ad to check them all",
+                                visible = ResourceVisibility.OWNER_ONLY,
+                            ),
+                            debug = CpBaseDebug(
+                                mode = CpRequestDebugMode.STUB,
+                                stub = CpRequestDebugStubs.SUCCESS
+                            )
                         )
-                    ))
+                    )
                 )
             )
             app.stop()
@@ -63,7 +58,7 @@ class KafkaControllerTest {
         app.run()
 
         val message = producer.history().first()
-        val result = apiV1ResponseDeserialize<ResourceCreateResponse>(message.value())
+        val result = Json.decodeFromString(IResponse.serializer(), message.value()) as ResourceCreateResponse
         assertEquals(outputTopic, message.topic())
         assertEquals("11111111-1111-1111-1111-111111111111", result.requestId)
     }

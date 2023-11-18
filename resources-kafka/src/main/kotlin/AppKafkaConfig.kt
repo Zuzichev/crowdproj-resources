@@ -1,8 +1,9 @@
-package ru.otus.otuskotlin.marketplace.app.kafka
+package com.crowdproj.resources.app.kafka
 
-import ru.otus.otuskotlin.marketplace.app.common.IResorcesAppSettings
-import ru.otus.otuskotlin.marketplace.biz.ResourcesProcessor
-import ru.otus.otuskotlin.marketplace.common.ResourcesCorSettings
+import com.crowdproj.resources.app.common.IMkplAppSettings
+import com.crowdproj.resources.biz.ResourcesProcessor
+import com.crowdproj.resources.common.ResourcesCorSettings
+import com.crowdproj.resources.logging.common.MpLoggerProvider
 
 class AppKafkaConfig(
     val kafkaHosts: List<String> = KAFKA_HOSTS,
@@ -11,7 +12,8 @@ class AppKafkaConfig(
     val kafkaTopicOutV1: String = KAFKA_TOPIC_OUT_V1,
     override val corSettings: ResourcesCorSettings = ResourcesCorSettings(),
     override val processor: ResourcesProcessor = ResourcesProcessor(corSettings),
-): IResorcesAppSettings {
+    override val logger: MpLoggerProvider = MpLoggerProvider(),
+): IMkplAppSettings {
     companion object {
         const val KAFKA_HOST_VAR = "KAFKA_HOSTS"
         const val KAFKA_TOPIC_IN_V1_VAR = "KAFKA_TOPIC_IN_V1"

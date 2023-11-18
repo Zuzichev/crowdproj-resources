@@ -1,6 +1,7 @@
 plugins {
     application
     kotlin("jvm")
+    kotlin("plugin.serialization")
 }
 
 application {
@@ -13,6 +14,12 @@ dependencies {
     val atomicfuVersion: String by project
     val logbackVersion: String by project
     val kotlinLoggingJvmVersion: String by project
+    val serializationVersion: String by project
+
+    implementation(kotlin("stdlib-common"))
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
     implementation("org.apache.kafka:kafka-clients:$kafkaVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:atomicfu:$atomicfuVersion")
